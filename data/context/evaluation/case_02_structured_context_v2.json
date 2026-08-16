@@ -1,0 +1,112 @@
+{
+  "context_package_version": "v2",
+  "context_origin": "manual_structured",
+  "context_id": "eval_case_02_phone_login_context_v2",
+  "summary": "Evaluation structured context for incomplete phone login requirement.",
+  "structured_content": {
+    "confirmed_facts": [
+      {
+        "id": "fact_phone_login_supported",
+        "text": "账号系统需要增加手机号登录能力。",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_login_success_home",
+        "text": "登录成功后进入系统首页。",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#已知信息",
+        "confidence": "high"
+      }
+    ],
+    "business_rules": [
+      {
+        "id": "rule_user_can_choose_phone_login",
+        "text": "用户可以在登录页选择手机号登录。",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_phone_login_log_required",
+        "text": "系统需要记录手机号登录相关操作日志。",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#需求",
+        "confidence": "high"
+      }
+    ],
+    "constraints": [],
+    "process_flows": [
+      {
+        "id": "flow_phone_login_basic",
+        "text": "用户选择手机号登录，输入手机号后进入验证流程，验证通过后登录系统。",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#需求",
+        "confidence": "high"
+      }
+    ],
+    "unknowns": [
+      {
+        "id": "unknown_phone_login_auth_method",
+        "text": "手机号登录使用短信验证码、密码还是其他验证方式未明确。",
+        "applies_to": ["进入验证流程", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_phone_login_credential_expiry",
+        "text": "验证码或登录凭证的有效期未明确。",
+        "applies_to": ["进入验证流程", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_phone_login_failure_handling",
+        "text": "验证失败后的处理规则未明确。",
+        "applies_to": ["进入验证流程", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_phone_login_rate_limit",
+        "text": "同一手机号是否限制发送频率未明确。",
+        "applies_to": ["进入验证流程", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_unregistered_phone_login",
+        "text": "未注册手机号是否允许登录未明确。",
+        "applies_to": ["验证通过后登录系统", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_multi_account_same_phone",
+        "text": "多账号绑定同一手机号时如何处理未明确。",
+        "applies_to": ["验证通过后登录系统", "手机号登录"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_failed_login_log",
+        "text": "登录失败是否记录日志未明确。",
+        "applies_to": ["系统记录手机号登录相关操作日志", "操作日志"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_phone_login_log_fields",
+        "text": "操作日志需要记录哪些字段未明确。",
+        "applies_to": ["系统记录手机号登录相关操作日志", "操作日志"],
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      }
+    ],
+    "source_refs": [
+      {
+        "id": "source_case_02_requirement",
+        "text": "case_02 requirement file",
+        "source_ref": "data/evaluation_cases/case_02_incomplete_requirement/requirement.md",
+        "confidence": "high"
+      }
+    ],
+    "quality_flags": []
+  }
+}

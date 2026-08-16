@@ -1,0 +1,174 @@
+{
+  "context_package_version": "v2",
+  "context_origin": "manual_structured",
+  "context_id": "eval_case_03_coupon_context_v2",
+  "summary": "Evaluation structured context for complex coupon selection requirement.",
+  "structured_content": {
+    "confirmed_facts": [
+      {
+        "id": "fact_coupon_auto_selection_supported",
+        "text": "订单系统需要增加优惠券自动选择能力。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_coupon_manual_switch_supported",
+        "text": "用户可以手动切换为其他可用优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#需求",
+        "confidence": "high"
+      }
+    ],
+    "business_rules": [
+      {
+        "id": "rule_coupon_unused",
+        "text": "优惠券必须处于未使用状态。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_valid_period",
+        "text": "优惠券必须在有效期内。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_product_scope",
+        "text": "优惠券适用商品范围必须覆盖订单中的商品。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_store_scope",
+        "text": "优惠券适用门店范围必须覆盖订单所属门店。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_min_amount",
+        "text": "订单实付金额必须满足优惠券最低使用门槛。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_best_coupon_highest_discount",
+        "text": "优先选择优惠金额最高的优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_best_coupon_earliest_expiry",
+        "text": "优惠金额相同时，优先选择更早过期的优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_best_coupon_earliest_created",
+        "text": "优惠金额和过期时间仍然相同时，优先选择创建时间更早的优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_manual_switch_available_only",
+        "text": "用户只能切换为当前订单可用的优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_unavailable_coupon_reason",
+        "text": "不可用优惠券需要展示不可用原因。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_manual_selection_not_overwritten",
+        "text": "用户手动切换后，系统不得再次自动覆盖用户选择，除非订单商品、门店或金额发生变化。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_discount_not_exceed_product_amount",
+        "text": "优惠券金额不能超过订单商品金额。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_shipping_not_discounted",
+        "text": "运费不参与优惠券抵扣。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_order_amount_recalculated",
+        "text": "使用优惠券后，订单应重新计算实付金额。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_coupon_log_fields",
+        "text": "优惠券日志字段包括用户ID、订单ID、优惠券ID、操作类型、操作时间、计算前金额、计算后金额和操作结果。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint_frozen_account_no_coupon",
+        "text": "已冻结账号不可使用优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      }
+    ],
+    "process_flows": [
+      {
+        "id": "flow_coupon_auto_select",
+        "text": "用户提交订单前，系统根据当前订单自动选择一张最优优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "flow_coupon_manual_switch",
+        "text": "系统自动选择优惠券后，用户可以手动切换为其他可用优惠券。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "flow_coupon_recalculate_amount",
+        "text": "使用优惠券后，系统重新计算订单实付金额并记录相关操作日志。",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#业务规则",
+        "confidence": "high"
+      }
+    ],
+    "unknowns": [
+      {
+        "id": "unknown_coupon_stacking",
+        "text": "多张优惠券是否允许叠加使用未确定。",
+        "applies_to": ["系统根据当前订单自动选择一张最优优惠券", "优惠券自动选择"],
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_manual_selection_after_amount_change",
+        "text": "订单金额变化后是否保留用户手动选择的优惠券未确定。",
+        "applies_to": ["用户手动切换为其他可用优惠券", "手动切换优惠券"],
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_unavailable_reason_priority",
+        "text": "优惠券不可用原因的展示优先级未确定。",
+        "applies_to": ["用户手动切换为其他可用优惠券", "不可用优惠券展示"],
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md#未明确内容",
+        "confidence": "high"
+      }
+    ],
+    "source_refs": [
+      {
+        "id": "source_case_03_requirement",
+        "text": "case_03 requirement file",
+        "source_ref": "data/evaluation_cases/case_03_complex_rule_requirement/requirement.md",
+        "confidence": "high"
+      }
+    ],
+    "quality_flags": []
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "gold_label_version": "v1",
+  "description": "Independent labels for auto-context smoke data. These labels are used only for evaluation metrics, not as Agent input.",
+  "items": [
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 12,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 13,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["valid", "conflict"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 14,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["valid", "conflict"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 15,
+      "expected_section": "process_flows",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 16,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 17,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 18,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 22,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 23,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 24,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 28,
+      "expected_section": "confirmed_facts",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 29,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 30,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 31,
+      "expected_section": "constraints",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 32,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 33,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 37,
+      "expected_section": "confirmed_facts",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 38,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 39,
+      "expected_section": "business_rules",
+      "expected_decision": "release",
+      "tags": ["valid", "valid_new_rule"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 40,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/valid_account_context.md",
+      "line": 41,
+      "expected_section": "unknowns",
+      "expected_decision": "release",
+      "tags": ["valid"]
+    },
+    {
+      "source_path": "data/history/conflict_account_context.md",
+      "line": 12,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["conflict"]
+    },
+    {
+      "source_path": "data/history/conflict_account_context.md",
+      "line": 13,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["conflict"]
+    },
+    {
+      "source_path": "data/history/deprecated_account_context.md",
+      "line": 12,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["deprecated"]
+    },
+    {
+      "source_path": "data/history/deprecated_account_context.md",
+      "line": 13,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["deprecated"]
+    },
+    {
+      "source_path": "data/history/deprecated_account_context.md",
+      "line": 14,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["deprecated"]
+    },
+    {
+      "source_path": "data/history/irrelevant_notes_context.md",
+      "line": 12,
+      "expected_section": "business_rules",
+      "expected_decision": "reject",
+      "tags": ["irrelevant"]
+    },
+    {
+      "source_path": "data/history/low_trust_account_context.md",
+      "line": 12,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["low_trust", "scope_unknown"]
+    },
+    {
+      "source_path": "data/history/low_trust_account_context.md",
+      "line": 13,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["low_trust", "scope_unknown"]
+    },
+    {
+      "source_path": "data/history/low_trust_account_context.md",
+      "line": 14,
+      "expected_section": "business_rules",
+      "expected_decision": "review",
+      "tags": ["low_trust", "scope_unknown"]
+    }
+  ]
+}

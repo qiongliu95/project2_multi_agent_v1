@@ -1,0 +1,214 @@
+{
+  "registry_version": "v2",
+  "scope": "execution_trace_reference_only",
+  "notes": [
+    "This registry is declarative metadata for trace and architecture review.",
+    "It is not connected to scheduling and does not change pipeline execution.",
+    "Existing Agent internals are modeled as native_capabilities, not Skill files.",
+    "The repository context skill is declared here for traceability only; Context Provider selection is still code-owned."
+  ],
+  "agents": {
+    "requirement_gap_detection": {
+      "stage": "requirement_gap_detection",
+      "schema_name": "requirement_gap_detection_schema",
+      "prompt_ref": "prompts/agent1a_parsing_gap_detection.md",
+      "implementation_ref": "core/agent1a_parsing_gap_detection.py",
+      "native_capabilities": [
+        "requirement_fact_extraction",
+        "main_flow_identification",
+        "action_gap_detection",
+        "action_gap_candidate_normalization"
+      ],
+      "policies": [
+        "source_boundary_policy",
+        "no_business_assumption_policy"
+      ],
+      "external_skill_candidates": [
+        "prd_markdown_extraction",
+        "pdf_table_extraction",
+        "github_context",
+        "ui_prototype_analysis"
+      ],
+      "external_skills": [
+        "understand_domain_repository_context"
+      ],
+      "tools": [
+        "local_markdown_context_reader",
+        "local_structured_context_reader",
+        "execution_trace_writer",
+        "future_schema_validator",
+        "future_evidence_checker"
+      ]
+    },
+    "clarification": {
+      "stage": "clarification",
+      "schema_name": "clarification_schema",
+      "prompt_ref": "prompts/agent1b_question_generation.md",
+      "implementation_ref": "core/agent1b_question_generation.py",
+      "native_capabilities": [
+        "clarification_question_generation"
+      ],
+      "policies": [
+        "clarification_compression_policy",
+        "no_solution_suggestion_policy"
+      ],
+      "external_skill_candidates": [],
+      "tools": [
+        "execution_trace_writer",
+        "future_schema_validator",
+        "future_evidence_checker"
+      ]
+    },
+    "risk_analysis": {
+      "stage": "risk_analysis",
+      "schema_name": "risk_analysis_schema",
+      "prompt_ref": "prompts/agent_2_risk_review.md",
+      "implementation_ref": "core/agent2_risk_analysis.py",
+      "native_capabilities": [
+        "missing_information_mapping",
+        "evidence_bound_risk_classification"
+      ],
+      "policies": [
+        "evidence_boundary_policy",
+        "no_generic_checklist_policy"
+      ],
+      "external_skill_candidates": [
+        "github_context",
+        "permission_matrix_analysis",
+        "state_transition_analysis",
+        "historical_defect_retrieval"
+      ],
+      "tools": [
+        "execution_trace_writer",
+        "future_schema_validator",
+        "future_evidence_checker",
+        "future_baseline_evaluator"
+      ]
+    },
+    "controlled_test_draft": {
+      "stage": "controlled_test_draft",
+      "schema_name": "controlled_test_draft_schema",
+      "prompt_ref": "prompts/agent_3_test_design.md",
+      "implementation_ref": "core/agent3_test_design.py",
+      "native_capabilities": [
+        "controlled_test_draft_generation",
+        "acceptance_criteria_extraction"
+      ],
+      "policies": [
+        "stop_generation_policy",
+        "no_complete_test_case_policy"
+      ],
+      "external_skill_candidates": [
+        "prd_markdown_extraction",
+        "pdf_table_extraction",
+        "ui_prototype_analysis",
+        "state_transition_analysis",
+        "permission_matrix_analysis",
+        "api_contract_testing",
+        "historical_defect_retrieval"
+      ],
+      "tools": [
+        "execution_trace_writer",
+        "future_schema_validator",
+        "future_evidence_checker",
+        "future_baseline_evaluator"
+      ]
+    },
+    "review": {
+      "stage": "review",
+      "schema_name": "review_schema",
+      "prompt_ref": "prompts/agent_4_summary.md",
+      "implementation_ref": "core/agent4_result_summary.py",
+      "native_capabilities": [
+        "traceable_result_summary"
+      ],
+      "policies": [
+        "human_review_routing_policy",
+        "summary_boundary_policy"
+      ],
+      "external_skill_candidates": [
+        "github_context",
+        "historical_defect_retrieval"
+      ],
+      "tools": [
+        "execution_trace_writer",
+        "future_schema_validator",
+        "future_evidence_checker",
+        "future_baseline_evaluator"
+      ]
+    }
+  },
+  "policy_catalog": {
+    "clarification_compression_policy": "Controls question count and deduplication; not an External Skill.",
+    "stop_generation_policy": "Prevents complete test-case generation when information is insufficient.",
+    "human_review_routing_policy": "Marks outputs that require human review.",
+    "evidence_boundary_policy": "Restricts risk and summary content to allowed upstream evidence.",
+    "summary_boundary_policy": "Prevents Review from adding new questions, risks, or test points."
+  },
+  "tool_catalog": {
+    "local_markdown_context_reader": "Reads configured local Markdown context sources before Agent1A.",
+    "local_structured_context_reader": "Reads manually prepared local Context Package V2 JSON sources before Agent execution.",
+    "execution_trace_writer": "Records Agent execution metadata.",
+    "future_schema_validator": "Future deterministic output schema check.",
+    "future_evidence_checker": "Future deterministic source-boundary check.",
+    "future_baseline_evaluator": "Future deterministic or semi-automatic baseline comparison."
+  },
+  "external_skill_catalog": {
+    "understand_domain_repository_context": {
+      "purpose": "Build local repository context from file tree, entry points, file signatures, and metadata.",
+      "source_ref": "C:/Users/12643/.codex/skills/understand-domain/extract-domain-context.py",
+      "status": "implemented_context_provider",
+      "participates_in_execution": true,
+      "capability_type": "skill",
+      "safety_profile": {
+        "local_only": true,
+        "read_only": true,
+        "network_access": false,
+        "shell_commands": false,
+        "writes_to_repository": false
+      }
+    }
+  },
+  "external_skill_candidates_catalog": {
+    "prd_markdown_extraction": {
+      "purpose": "Extract requirement context from PRD or Markdown documents.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "pdf_table_extraction": {
+      "purpose": "Extract structured context from PDF, spreadsheet, or table artifacts.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "github_context": {
+      "purpose": "Collect context from GitHub Issues, PRs, README, or repository metadata.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "ui_prototype_analysis": {
+      "purpose": "Extract UI, page, field, and interaction context from screenshots or prototypes.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "state_transition_analysis": {
+      "purpose": "Analyze explicit state transitions when requirements include stateful flows.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "permission_matrix_analysis": {
+      "purpose": "Analyze role and permission boundaries when requirements include multiple roles.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "api_contract_testing": {
+      "purpose": "Generate API contract test focus from OpenAPI or interface documents.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    },
+    "historical_defect_retrieval": {
+      "purpose": "Retrieve related defects or test assets as context for risk and draft design.",
+      "status": "candidate_only",
+      "participates_in_execution": false
+    }
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "context_package_version": "v2",
+  "context_id": "registration_context_v2",
+  "summary": "用户账号系统注册、登录、个人资料和操作日志的结构化业务上下文。",
+  "structured_content": {
+    "confirmed_facts": [
+      {
+        "id": "fact_phone_registration_supported",
+        "text": "当前系统支持手机号注册账号。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_login_supported",
+        "text": "当前系统支持用户登录。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#2-登录功能",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_profile_view_modify_supported",
+        "text": "用户可以查看和修改个人资料。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_operation_log_required",
+        "text": "系统需要记录用户操作日志。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      }
+    ],
+    "business_rules": [
+      {
+        "id": "rule_phone_required_for_registration",
+        "text": "用户注册时需要填写手机号。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_phone_unique",
+        "text": "手机号在系统内必须保持唯一。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_sms_verification_required",
+        "text": "注册过程需要进行短信验证码验证。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_no_auto_login_after_registration",
+        "text": "注册成功后不会自动登录，需要用户重新进入登录流程。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_login_by_phone_and_password",
+        "text": "用户通过手机号和密码登录系统。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#2-登录功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_registered_user_uses_login_flow",
+        "text": "用户注册完成后，需要使用登录流程进入系统。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#2-登录功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_profile_view_fields",
+        "text": "用户可以查看昵称、头像、手机号、注册时间。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_profile_edit_fields",
+        "text": "用户可以修改昵称和头像。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_operation_log_recorded_actions",
+        "text": "系统记录用户注册操作、用户登录操作、用户修改个人资料操作。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_operation_log_fields",
+        "text": "日志字段包括用户ID、操作类型、操作时间。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint_phone_not_directly_editable",
+        "text": "手机号不允许直接修改。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "constraint_registration_time_readonly",
+        "text": "注册时间不可修改。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      }
+    ],
+    "process_flows": [
+      {
+        "id": "flow_registration_then_login",
+        "text": "用户填写手机号并完成短信验证码验证后注册成功；注册成功后需要重新进入登录流程。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "flow_profile_view_and_modify",
+        "text": "用户登录后可以查看昵称、头像、手机号、注册时间，并可以修改昵称和头像。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "flow_operation_log_recording",
+        "text": "系统在用户注册、用户登录、用户修改个人资料时记录操作日志。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      }
+    ],
+    "unknowns": [
+      {
+        "id": "unknown_sms_expiry",
+        "text": "短信验证码有效时间未确定。",
+        "applies_to": ["用户通过手机号注册账号", "手机号注册", "注册功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_sms_rate_limit",
+        "text": "短信验证码发送频率限制未确定。",
+        "applies_to": ["用户通过手机号注册账号", "手机号注册", "注册功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_sms_verification_failure_handling",
+        "text": "验证失败后的处理规则未确定。",
+        "applies_to": ["用户通过手机号注册账号", "手机号注册", "注册功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#1-注册功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_login_failure_limit",
+        "text": "登录失败次数限制未确定。",
+        "applies_to": ["注册后登录系统", "用户登录", "登录功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#2-登录功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_alternative_login_methods",
+        "text": "是否支持其他登录方式未确定。",
+        "applies_to": ["注册后登录系统", "用户登录", "登录功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#2-登录功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_phone_change_flow",
+        "text": "修改手机号的业务流程未确定。",
+        "applies_to": ["修改个人资料", "个人资料修改", "个人资料功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_profile_update_second_verification",
+        "text": "用户资料修改是否需要二次验证未确定。",
+        "applies_to": ["修改个人资料", "个人资料修改", "个人资料功能"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#3-个人资料功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_login_failure_log_recording",
+        "text": "登录失败是否记录日志未确定。",
+        "applies_to": ["系统记录用户操作日志", "操作日志", "用户操作日志"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_log_retention_period",
+        "text": "日志保存周期未确定。",
+        "applies_to": ["系统记录用户操作日志", "操作日志", "用户操作日志"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      },
+      {
+        "id": "unknown_user_log_visibility",
+        "text": "用户是否可以查看自己的操作日志未确定。",
+        "applies_to": ["系统记录用户操作日志", "操作日志", "用户操作日志"],
+        "source_ref": "outputs/verify_inputs/markdown_context.md#4-操作日志功能",
+        "confidence": "high"
+      }
+    ],
+    "source_refs": [
+      {
+        "id": "source_markdown_registration_context",
+        "text": "上下文来源文件为 outputs/verify_inputs/markdown_context.md。",
+        "source_ref": "outputs/verify_inputs/markdown_context.md",
+        "confidence": "high"
+      }
+    ],
+    "quality_flags": [
+      {
+        "id": "quality_manual_structured_context",
+        "text": "Context Package V2 第一版由人工根据 Markdown 上下文整理，未经过自动抽取。",
+        "source_ref": "data/context/registration_context_v2.json",
+        "confidence": "high"
+      }
+    ]
+  }
+}

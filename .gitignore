@@ -1,0 +1,33 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# Python caches and local runtime state
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+
+# Generated outputs and experiment runs
+outputs/*
+!outputs/.gitkeep
+run_agent1a_parsing_and_gap_detection/
+run_agent1b_question_generation/
+
+# Local analysis/cache artifacts
+.understand-anything/
+
+# IDE/editor files
+.idea/
+.vscode/
+*.iml
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# OS metadata
+.DS_Store
+Thumbs.db

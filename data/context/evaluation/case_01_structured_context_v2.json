@@ -1,0 +1,110 @@
+{
+  "context_package_version": "v2",
+  "context_origin": "manual_structured",
+  "context_id": "eval_case_01_email_binding_context_v2",
+  "summary": "Evaluation structured context for email binding requirement.",
+  "structured_content": {
+    "confirmed_facts": [
+      {
+        "id": "fact_email_binding_supported",
+        "text": "账号系统支持用户在个人资料页绑定邮箱地址。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "fact_email_change_supported",
+        "text": "已绑定邮箱的用户可以更换邮箱。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      }
+    ],
+    "business_rules": [
+      {
+        "id": "rule_email_verification_required",
+        "text": "绑定邮箱时需要完成邮箱验证码校验。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_email_verification_expiry_10m",
+        "text": "邮箱验证码有效期为10分钟。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_email_send_rate_limit_60s",
+        "text": "同一邮箱60秒内只能发送一次验证码。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_one_account_one_email",
+        "text": "一个账号只能绑定一个邮箱。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_one_email_one_account",
+        "text": "一个邮箱只能绑定一个账号。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_email_change_dual_verification",
+        "text": "更换邮箱时需要先完成当前登录账号的短信验证码校验，再完成新邮箱验证码校验。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_email_format_standard",
+        "text": "邮箱格式必须符合标准邮箱格式。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      },
+      {
+        "id": "rule_email_log_fields",
+        "text": "邮箱绑定日志字段包括用户ID、操作类型、操作时间、绑定前邮箱、绑定后邮箱和操作结果。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      }
+    ],
+    "constraints": [
+      {
+        "id": "constraint_email_requires_login",
+        "text": "用户未登录时不允许进入邮箱绑定流程。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#异常处理",
+        "confidence": "high"
+      },
+      {
+        "id": "constraint_email_taken_rejected",
+        "text": "邮箱已被其他账号绑定时拒绝绑定。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#异常处理",
+        "confidence": "high"
+      }
+    ],
+    "process_flows": [
+      {
+        "id": "flow_email_binding",
+        "text": "用户登录后进入个人资料页，输入邮箱地址，完成邮箱验证码校验后绑定成功。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#需求",
+        "confidence": "high"
+      },
+      {
+        "id": "flow_email_change",
+        "text": "用户更换邮箱时先校验当前登录账号短信验证码，再校验新邮箱验证码。",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md#绑定规则",
+        "confidence": "high"
+      }
+    ],
+    "unknowns": [],
+    "source_refs": [
+      {
+        "id": "source_case_01_requirement",
+        "text": "case_01 requirement file",
+        "source_ref": "data/evaluation_cases/case_01_complete_requirement/requirement.md",
+        "confidence": "high"
+      }
+    ],
+    "quality_flags": []
+  }
+}

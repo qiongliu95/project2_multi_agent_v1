@@ -1,0 +1,7 @@
+{
+  "mode": "agent1_two_stage",
+  "use_agent1_two_stage": false,
+  "use_agent2_dual_channel": false,
+  "use_harness_run_manager": false,
+  "context_sources": []
+}
