@@ -2,13 +2,21 @@
 
 ## Scope
 
+> 文档状态：Current。
+>
+> 本文件是当前冻结版本的 Agent 与 Context contract。它只澄清职责、输入语义和兼容命名，不要求修改 Python runtime、Agent 顺序、Context distribution 或 Workflow architecture。
+
 本文件用于统一当前 Multi-Agent 需求分析系统中的三类契约：
 
 - Runtime 实际传入 Agent 的信息。
 - Stage Artifact 在 Agent 之间传递的信息。
 - Prompt 中对输入来源和使用优先级的描述。
 
-本次只做契约审查和统一建议，不修改代码、Prompt、Pipeline 顺序、Context 类型或业务逻辑。
+当前权威分工：
+
+- README / Project Exit：项目当前定位、范围和最终口径。
+- 本文件：Agent 与 Context contract。
+- current code：实际 runtime behavior。
 
 ## 1. Current Runtime Facts
 
@@ -16,7 +24,7 @@
 
 当前 Workflow State 中保存的 `workflow_state.input.requirement_text` 仍然是原始需求文本，没有被 Context 覆盖。
 
-但在 Agent 调用层，多个 Agent 函数参数仍命名为 `requirement_text`，实际传入内容可能是：
+但在 Agent 调用层，多个 Agent wrapper 为兼容旧调用仍保留 `requirement_text` 参数名，实际传入内容可能是：
 
 - Text 模式：原始需求文本。
 - Markdown 模式：Agent1A 收到 `原始需求 + 原始 Markdown Context`；Agent1B 到 Agent4 收到原始需求和上游 Stage Artifact。
@@ -28,9 +36,9 @@
 |---|---|---|
 | `workflow_state.input.requirement_text` | 原始需求文本 | 无冲突 |
 | `rendered_agent_input` | 原始需求文本 + 当前 Agent Context View | 正确运行结构 |
-| Agent payload 中的 `requirement_text` | 有时是原始需求，有时是 rendered input | 命名和 Prompt 描述冲突 |
+| Agent payload / wrapper 参数中的 `requirement_text` | 兼容保留的参数名；有时是原始需求，有时是 rendered input | 命名兼容债务，不代表要求修改函数签名 |
 
-结论：运行逻辑没有覆盖原始需求，但 Agent Prompt 和 wrapper 参数名容易让人误解为“只传入原始需求”。这是契约命名问题，不是 Pipeline 行为错误。
+结论：运行逻辑没有覆盖原始需求。`requirement_text` 在 wrapper / payload 中是兼容保留名称；阅读契约时应区分 original requirement text、Agent Context View、rendered agent input 和兼容参数名。这是契约命名问题，不是 Pipeline 行为错误，本轮不修改函数签名或重构 Pipeline。
 
 ### 1.2 当前 Context View 分发
 
@@ -44,7 +52,7 @@
 | Agent3 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns` |
 | Agent4 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `source_refs`, `quality_flags` |
 
-这说明当前已经避免了 Agent1B 再读完整 Context；Agent3 的 `unknowns` 经过前期实验被保留，因为 `risk_items` 只能承接部分 unknown 信息。
+这说明当前 Agent1B 的 Context visibility 是 indirect-only：它不直接消费完整 Context View，只能通过 Agent1A Stage Artifact 间接继承已归属到动作缺口的 `known_conditions`、`specific_unknowns` 和 `context_refs`。Agent3 的 `unknowns` 经过前期实验被保留，因为 `risk_items` 只能承接部分 unknown 信息。
 
 ## 2. Current Information Flow
 
@@ -75,17 +83,18 @@ Context Source
 | Agent3 | `core_test_points`, `edge_test_points`, `performance_test_points`, `acceptance_criteria`, `test_case_drafts` | Agent4 |
 | Agent4 | `requirement_summary`, `risk_summary`, `test_recommendation`, `human_review_required`, `critical_open_questions` | Final Output |
 
-## 3. Contract Conflicts
+## 3. Current Contract Notes
 
-### C1. `requirement_text` 名称与实际输入不一致
+### C1. `requirement_text` 兼容命名与实际输入不一致
 
-代码层为了兼容旧 Agent wrapper，仍用 `requirement_text` 作为 payload key，但 Structured / Auto Context 模式下该字段包含 Agent Context View。
+代码层为了兼容旧 Agent wrapper，仍用 `requirement_text` 作为 payload key。对部分 Agent wrapper，在 Structured / Auto Context 模式下，该字段可能承载 rendered agent input，即 original requirement text 与该 Agent 可见的 Agent Context View 的组合。
 
-影响：
+当前影响：
 
-- Agent1A Prompt 开头仍描述“基于原始需求文本”，但后续 Field Rules 又要求使用 Agent Context View。
-- Agent2 Prompt 声明只接收 `requirement_text`、Agent1A 和 Agent1B 结果，没有明确 `requirement_text` 里可能包含 Context View。
-- Agent4 Prompt 输入列表没有明确 Context / source summary 的角色。
+- Prompt 已补充 rendered input / Context View 说明。
+- Wrapper / payload 参数名仍保留 `requirement_text`，这是兼容命名，不代表函数签名需要在当前冻结版本中修改。
+- Agent1B 是明确例外：Agent1B 的 `requirement_text` 保持 original requirement text，不直接接收完整 Agent Context View；其所需的 Context 相关信息仅通过 Agent1A Artifact 间接传递。
+- 阅读 Trace 或 payload 时必须区分 original requirement text、Agent Context View、rendered agent input 和兼容参数名。
 
 建议主来源命名：
 
@@ -93,18 +102,17 @@ Context Source
 - `agent_context_view`：Agent 专属 Context。
 - `rendered_agent_input`：临时组合后的实际 LLM 输入。
 
-### C2. Agent2 Prompt 未同步 Context View 与 `risk_items`
+### C2. Agent2 `risk_items` 的 Stage Artifact 边界
 
 Runtime 中 Agent2 会收到 Agent2 Context View，并且代码在 LLM 输出后后处理生成 `risk_items`。
 
-但 Agent2 Prompt 当前只声明旧六类风险数组，不声明 Context View，也不声明 `risk_items` 的系统生成边界。
+当前 contract：
 
-影响：
+- Agent2 Prompt 已声明 Agent2 Context View。
+- 旧六类风险数组仍由模型输出。
+- `risk_items` 是 Agent2 阶段提供给 Agent3 的结构化风险接口，当前由代码后处理生成，不要求模型直接输出。
 
-- 从 Prompt 视角看，Agent2 可能只把 Context 当作混入 `requirement_text` 的普通文本。
-- `risk_items` 是代码后处理产物，不应要求模型直接生成，但需要在契约文档中明确它属于 Agent2 Stage Artifact。
-
-### C3. Agent4 Runtime 输入多于 Prompt 声明
+### C3. Agent4 兼容 payload 输入多于主 contract
 
 Agent4 Runtime payload 包含：
 
@@ -115,12 +123,10 @@ Agent4 Runtime payload 包含：
 - `agent_3_test_design`
 - `agent_2_full_output`
 
-Prompt 输入描述没有完整列出 `agent_1_questions` 和 `agent_2_full_output`，但字段规则又要求复用 `agent_1_questions.open_questions`。
-
 影响：
 
-- Prompt 与真实 payload 不完全一致。
 - `agent_2_risk_analysis` 与 `agent_2_full_output` 当前传入同一对象，存在重复。
+- `agent_2_full_output` 是兼容保留字段，不改变 Agent4 以 Stage Artifact 汇总为主的职责。
 
 ### C4. Agent3 已同步 `risk_items`，但 Context unknowns 仍保留
 
@@ -170,7 +176,7 @@ Markdown Context 没有 item 级 Context View，当前只在 Agent1A 输入中�
 
 Input:
 
-- `original_requirement_text`
+- `original_requirement_text`，在当前 wrapper 中仍通过兼容参数名 `requirement_text` 传入。
 - Business Context View:
   - `confirmed_facts`
   - `business_rules`
@@ -224,9 +230,12 @@ Output:
 
 Contract:
 
+- Agent1B 保留为现有 Workflow 中的独立阶段。
+- Agent1B 的职责收敛为：基于 Agent1A 已识别的缺口 artifact，形成澄清问题表达并保留问题来源追踪。
 - 优先把 `specific_unknowns` 转成澄清问题。
 - `known_conditions` 已回答的信息不得重复提问。
 - `question_sources.context_refs` 保留来源 item ID。
+- Agent1B 不重新承担 Agent1A 的缺口判断职责，也不直接消费完整 Context。
 
 ### Agent2
 
@@ -330,20 +339,15 @@ Contract:
 
 ### P0: Prompt 与 Runtime 输入描述一致
 
-需要后续同步的 Prompt：
+当前 Prompt 同步状态：
 
-| Prompt | 当前问题 | 建议 |
+| Prompt | 状态 | Contract note |
 |---|---|---|
-| `prompts/agent1a_parsing_gap_detection.md` | Input 只写 `requirement_text`，但实际可能包含 Agent Context View | 明确输入由 `original_requirement_text` 和可选 `Agent Context View` 组成 |
-| `prompts/agent_2_risk_review.md` | 未声明 Agent2 会收到 Context View；Output 未说明 `risk_items` 属于系统后处理 Artifact | 明确 `requirement_text` 中可能包含 Agent2 Context View；说明旧六类风险仍由模型输出，`risk_items` 由系统构建 |
-| `prompts/agent_4_summary.md` | 输入列表遗漏 `agent_1_questions`，且未说明 Context/source summary 的使用边界 | 明确优先汇总 Stage Artifact；Context/source summary 只用于来源和复核，不用于重新分析 |
-
-已基本同步的 Prompt：
-
-| Prompt | 状态 | 说明 |
-|---|---|---|
-| `prompts/agent1b_question_generation.md` | 基本一致 | Agent1B 已不直接消费 Context，主要使用 Agent1A Artifact |
-| `prompts/agent_3_test_design.md` | 基本一致 | 已声明 `risk_items` 优先级和 unknown 使用边界 |
+| `prompts/agent1a_parsing_gap_detection.md` | 已声明 `requirement_text` 可能是 original requirement 或 original requirement + Agent Context View | Current |
+| `prompts/agent1b_question_generation.md` | 已收敛为只使用 Agent1A artifact 生成澄清问题；不直接消费完整 Context | Current |
+| `prompts/agent_2_risk_review.md` | 已声明 Agent2 Context View 和 `risk_items` 后处理边界 | Current |
+| `prompts/agent_3_test_design.md` | 已声明 `risk_items` 优先级和 unknown 使用边界 | Current |
+| `prompts/agent_4_summary.md` | 已声明 `agent_1_questions`、`agent_2_full_output` 兼容字段和 Context/source summary 使用边界 | Current |
 
 遗留 Prompt：
 
@@ -412,4 +416,3 @@ Contract:
   - 原始依据来自 Context。
   - 阶段判断来自 Stage Artifact。
   - 最终汇总来自 Stage Artifact，而不是重新分析 Context。
-

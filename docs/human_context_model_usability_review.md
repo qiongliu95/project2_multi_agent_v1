@@ -1,5 +1,9 @@
 # Human Context Model 可维护性评审
 
+> 文档状态：Experimental / Candidate。
+>
+> 本文讨论人工维护上下文的候选形态，不代表当前冻结 Workflow 要新增 Context 层或改变 Agent1B indirect-only Context visibility。
+
 本文基于当前 `Context Compiler Design Review`，从真实产品经理和测试人员的工作方式出发，评审 Human Context Model 是否适合作为长期人工维护格式。
 
 本文不考虑技术实现，不修改代码，不扩展 RAG、知识库、Agent 平台或自动文档理解能力。
@@ -100,7 +104,7 @@ Human Maintained Context
 | 风险关注点 | Risk Context | 测试 | Agent2 |
 | 历史问题 | Risk Context | 测试，研发补充 | Agent2、Agent4 |
 | 验证关注点 | Validation Context | 测试 | Agent3 |
-| 未确认事项 | Business Context | 产品，测试补充 | Agent1A、Agent1B、Agent2、Agent4 |
+| 未确认事项 | Business Context | 产品，测试补充 | Agent1A、Agent2、Agent4；Agent1B 仅通过 Agent1A Artifact 间接消费 |
 
 拆分后仍可由 Context Compiler 编译为当前 Runtime Context Package V2；拆分只发生在人工维护层，不要求当前系统增加 Agent 或新的下游流程。
 

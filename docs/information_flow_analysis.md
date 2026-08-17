@@ -1,5 +1,9 @@
 # Multi-Agent 需求分析系统信息流审计
 
+> 文档状态：Historical / Superseded。
+>
+> 本文保留为 2026-08-07 信息流审计材料。当前 Agent 与 Context contract 以 `docs/agent_context_contract.md` 为准；其中 Agent1B 的 Context visibility 已收敛为 indirect-only，不直接消费完整 Context View。
+
 本文基于当前代码、Prompt、Schema 和已有 Trace/评估产物，对系统中的信息产生、传递、转换和消费方式做审计。本文只描述当前真实链路，不提出平台化扩展，不修改代码。
 
 ## 一、当前完整信息流
@@ -48,8 +52,8 @@ flowchart TD
 |---|---|---|---|---|
 | Text | 仅使用 `requirement_text`，无 Context Provider | 五个 Agent 都通过各自 payload 消费原始需求 | 保留原始需求引用 | 没有历史规则、约束、流程、unknown，风险和测试关注点只能基于当前文本推断 |
 | Markdown | 本地 Markdown 被读取为原始上下文；非 Structured 路径下主要拼接进 Agent1A 输入 | Agent1A 直接消费全文；Agent1B/2/3/4 主要消费 Agent1A 压缩后的结构化输出 | 文件路径和 Tool Trace 保留；业务 item 级来源不足 | 原始信息由 Agent1A 一次性理解和压缩，下游无法稳定知道某条规则来自哪一段 Markdown |
-| Structured Context V2 | JSON 中的 `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `source_refs`, `quality_flags` 被转换为各 Agent 的 Context View | 五个 Agent 按 `AGENT_CONTEXT_SECTIONS` 消费不同 section | item id、section、source_ref 可进入 Context View 和 Trace | 业务输出本身仍不强制携带 source_ref；section 分发可能导致部分信息对某 Agent 不可见 |
-| Auto Context | 历史文档先生成 index，再生成 review queue，经人工审核后 build consumable Context Package；Workflow 中复用 Structured 路径 | 审核通过后的 consumable items 作为 Structured Context 被五 Agent 消费 | source path、heading、line_range、审核状态、gold label 评估产物保留 | review queue 中候选不会进入 Agent，这是正确隔离；历史风险和历史测试关注点目前没有一等 section |
+| Structured Context V2 | JSON 中的 `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `source_refs`, `quality_flags` 被转换为各 Agent 的 Context View | Agent1A/2/3/4 按 `AGENT_CONTEXT_SECTIONS` 消费不同 section；Agent1B 只通过 Agent1A Artifact 间接继承来源 | item id、section、source_ref 可进入 Context View 和 Trace | 业务输出本身仍不强制携带 source_ref；Agent1B 的 Context visibility 是 indirect-only |
+| Auto Context | 历史文档先生成 index，再生成 review queue，经人工审核后 build consumable Context Package；Workflow 中复用 Structured 路径 | 审核通过后的 consumable items 作为 Structured Context 被 Agent1A/2/3/4 通过各自 Agent Context View 直接消费；Agent1B 仅通过 Agent1A Artifact 间接获得缺口相关信息 | source path、heading、line_range、审核状态、gold label 评估产物保留 | review queue 中候选不会进入 Agent，这是正确隔离；历史风险和历史测试关注点目前没有一等 section |
 
 ### Text 模式
 
@@ -70,7 +74,7 @@ Structured 模式把 Context Package V2 转成 Agent Context View。当前 secti
 | Agent | 消费 section |
 |---|---|
 | Agent1A | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns` |
-| Agent1B | `confirmed_facts`, `business_rules`, `constraints`, `unknowns` |
+| Agent1B | none；不直接消费完整 Context View，只通过 Agent1A Artifact 间接继承 `context_refs` |
 | Agent2 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `quality_flags` |
 | Agent3 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns` |
 | Agent4 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `source_refs`, `quality_flags` |
@@ -156,7 +160,7 @@ Structured Workflow
 - `main_flow`
 - `action_gap_candidates`
 - `unassigned_unknowns`
-- Structured 模式下的 Agent1B Context View。
+- Agent1B 不直接消费完整 Context View；Structured 模式下只能通过 Agent1A Artifact 间接继承 context_refs。
 
 输出：
 
@@ -315,11 +319,11 @@ Structured Workflow
 | 原始 `requirement_text` | 用户输入 / Workflow State | 五个 Agent、Trace、Final Output | 五个 Agent 都通过渲染输入消费 | 未丢失 |
 | Markdown 原文 | Markdown Provider | Agent1A 及可能的下游 | Agent1A 直接消费；下游主要消费 Agent1A 压缩结果 | 部分压缩 |
 | Markdown 文件路径 | Context Package / Tool Trace | 人工审计、最终复核 | Trace 可见；业务输出不稳定出现 | 业务输出侧丢失 |
-| `confirmed_facts` | Structured/Auto Context | Agent1A/1B/2/3/4 | 按 Context View 分发 | 未明显丢失 |
-| `business_rules` | Structured/Auto Context | Agent1A/1B/2/3/4 | 按 Context View 分发 | 未明显丢失，但最终输出不强制引用来源 |
-| `constraints` | Structured/Auto Context | Agent1A/1B/2/3/4 | 按 Context View 分发 | 未明显丢失 |
-| `process_flows` | Structured/Auto Context | Agent1A/2/3/4，部分澄清场景也可能需要 Agent1B | Agent1B 当前不消费 `process_flows` | 对 Agent1B 部分不可见 |
-| `unknowns` | Structured/Auto Context | Agent1A/1B/2/3/4 | 按 Context View 分发；Agent1A 转成 `specific_unknowns` | 未明显丢失 |
+| `confirmed_facts` | Structured/Auto Context | Agent1A/2/3/4；Agent1B indirect-only | 按 Context View 分发；Agent1B 通过 Agent1A Artifact 间接获得相关结论 | 未明显丢失 |
+| `business_rules` | Structured/Auto Context | Agent1A/2/3/4；Agent1B indirect-only | 按 Context View 分发；Agent1B 通过 Agent1A `known_conditions` 间接获得相关结论 | 未明显丢失，但最终输出不强制引用来源 |
+| `constraints` | Structured/Auto Context | Agent1A/2/3/4；Agent1B indirect-only | 按 Context View 分发；Agent1B 通过 Agent1A Artifact 间接获得相关结论 | 未明显丢失 |
+| `process_flows` | Structured/Auto Context | Agent1A/2/3/4；Agent1B 只可能通过 Agent1A Artifact 间接受益 | Agent1B 当前不消费 `process_flows` | 对 Agent1B 直接不可见，符合 indirect-only contract |
+| `unknowns` | Structured/Auto Context | Agent1A/2/3/4；Agent1B indirect-only | 按 Context View 分发；Agent1A 转成 `specific_unknowns` 后供 Agent1B 使用 | 未明显丢失 |
 | `source_ref` | Context item | 人工复核、Agent4、Trace | Context View 和 Trace 可见；Agent2/3 业务输出不强制保留 | 业务结论侧丢失 |
 | `applies_to_candidates` | Auto Context / Structured Context | Agent1A Action Alignment | Context View、Alignment、Trace | 未明显丢失 |
 | `known_conditions` | Agent1A | Agent1B/2/3/4 | 下游通过 Agent1A parsing result 消费 | 未明显丢失，但会被摘要压缩 |
@@ -482,7 +486,7 @@ Agent 不应该负责：
 
 1. 收敛 Agent2/Agent3 的输入消费边界，明确哪些 Context section 会影响风险和验证关注点。
 2. 在现有 Trace 和 Stage Artifact 中审计 source_ref/context_refs 是否从 Context View 传到关键业务结论。
-3. 检查 Agent1B 是否存在因 Context section 不可见或 Agent1A 压缩不足导致的重复提问。
+3. 检查 Agent1B 是否存在因 indirect-only 可见性和 Agent1A 压缩不足导致的重复提问。
 4. 保持 Auto Context 的候选隔离，继续用审核后的 consumable package 进入 Structured 链路。
 
 这四项都属于现有信息流审计和契约收敛，不需要扩展成 RAG、知识库、知识图谱或 Agent 平台。

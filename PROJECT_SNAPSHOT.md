@@ -1,8 +1,12 @@
 # Project Snapshot
 
+> 文档状态：Historical / Superseded。
+>
 > 历史快照说明：本文生成于 2026-08-08，记录的是当时项目状态。
 >
 > 当前项目已完成 Project Exit 并冻结，最终状态、运行方式和结项结论请以 `README.md` 与 `docs/project_exit_report.md` 为准。本文保留为历史审计材料，不作为当前最终口径。
+>
+> 2026-08-17 合同收敛说明：`requirement_text` 兼容命名、original requirement / rendered input 区分，以及 Agent1B indirect-only Context visibility 已在 `docs/agent_context_contract.md` 澄清。本文第 7 节的相关条目保留为历史发现，不再作为新的待扩展范围。
 
 - 生成时间：2026-08-08
 - 项目路径：`E:\AI-Research\project2_multi_agent`
@@ -987,9 +991,9 @@ Registry 当前性质：
 - Agent2 会继承并放大 Agent1A / Agent1B 的上游边界问题。
 - Agent3 / Agent4 输出中的 source/context 引用仍不稳定，尤其在 Markdown context 路径下。
 - Agent2 / Agent3 的结构化输出没有统一强制携带 item-level `context_refs`。
-- `requirement_text` 在部分运行时实际可能是“原始需求 + Context View”的 rendered input，字段命名与真实含义存在不一致。
+- 历史发现：`requirement_text` 在部分运行时实际可能是“原始需求 + Context View”的 rendered input，字段命名与真实含义存在不一致；当前已在 `docs/agent_context_contract.md` 澄清为兼容命名问题。
 - Agent4 runtime payload 中包含 `agent_2_risk_analysis` 和 `agent_2_full_output`，二者当前为重复对象。
-- 文档与代码存在不一致：部分文档仍写 Agent1B 消费 context sections，但当前代码中 Agent1B sections 为空。
+- 历史发现：部分文档曾写 Agent1B 消费 context sections，但当前代码中 Agent1B sections 为空；当前已在 `docs/agent_context_contract.md` 澄清为 Agent1B indirect-only Context visibility。
 - `docs/context_layer_boundary.md` 等早期文档描述“未实现 Context Layer”，与当前代码中的 Context V2 / compiler / preparer 状态不一致。
 - `extensions/agent2_dual_channel/agent2_risk_dual.py` 引用的 Prompt 路径下未发现对应 Prompt 文件；该扩展当前默认关闭。
 - `extensions/agent1_two_stage/agent1_parsing.py` 和 `extensions/harness/run_manager.py` 当前为空文件。

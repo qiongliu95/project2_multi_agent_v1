@@ -1,5 +1,7 @@
 # Multi-Agent 需求分析系统
 
+> 文档状态：Current。
+>
 > 项目状态：已完成 Project Exit，当前版本冻结。
 >
 > 本项目是面向作品集和面试展示的轻量 AI Workflow，不是生产级 Agent 平台、RAG 平台、企业知识库或自动测试平台。
@@ -45,7 +47,7 @@ Context Source
 | Agent | 当前阶段 | 职责 |
 |---|---|---|
 | Agent1A | requirement_gap_detection | 需求结构提取、主流程识别、known_conditions / specific_unknowns / context_refs 生成 |
-| Agent1B | clarification | 只基于 Agent1A Stage Artifact 生成澄清问题，不直接消费完整 Context |
+| Agent1B | clarification | 基于 Agent1A 已识别的缺口 artifact 形成澄清问题表达，并保留问题来源追踪；不重新承担 Agent1A 的缺口判断职责，也不直接消费完整 Context |
 | Agent2 | risk_analysis | 基于需求、Agent1A/1B Artifact 和 Context View 识别风险，并输出 `risk_items` |
 | Agent3 | controlled_test_draft | 基于风险、规则、限制和 unknown 生成验证关注点，不把 unknown 当确定事实 |
 | Agent4 | review | 汇总 Stage Artifact，判断是否需要人工复核，不重新分析原始 Context |
@@ -143,6 +145,18 @@ outputs/requirement_runs/{run_id}/
 | `outputs/human_eval_review_pack/` | Human Semantic Evaluation 审阅包 |
 | `outputs/verify_runs/`, `outputs/traces/` | verify_workflow 产生的观测结果和 Trace |
 | `docs/project_exit_report.md` | 最终项目结项报告，当前最高优先级结论文档 |
+
+## 5.1 文档状态说明
+
+为避免把历史设计、实验方案和当前冻结口径混用，当前文档按以下最小状态标记理解：
+
+| 状态 | 含义 | 主要文件 |
+|---|---|---|
+| Current | 当前冻结版本的有效口径或运行契约 | `README.md`, `docs/project_exit_report.md`, `docs/agent_context_contract.md`, current code |
+| Historical / Superseded | 历史快照、早期设计或已被当前契约覆盖的审计材料 | `PROJECT_SNAPSHOT.md`, `docs/information_flow_analysis.md`, `docs/system_architecture_review.md`, `docs/context_layer_boundary.md` |
+| Experimental / Candidate | 实验路径、候选能力或未来可能接入但不代表当前主线的材料 | Auto Context 相关文档、`docs/human_context_model_usability_review.md`, `configs/agent_registry_refs.json` 中的 `external_skill_candidates_catalog` |
+
+如果旧文档与 Current 文档或 current code 冲突，以 README / Project Exit、`docs/agent_context_contract.md` 和 current code 的职责分工为准；不要把 Historical 或 Candidate 内容当作新的实现计划。
 
 ## 6. 评估与结项结论
 

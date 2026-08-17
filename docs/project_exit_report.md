@@ -1,6 +1,6 @@
 # Multi-Agent 需求分析系统项目结项报告
 
-> 文档状态：最终结项结论。
+> 文档状态：Current / 最终结项结论。
 >
 > 本报告基于当前已完成的 Human Semantic Evaluation、三个核心 evaluation case 的 A/B/C 真实运行结果、review pack、scorecard 和 Evaluation MVP 文档整理。本文不新增评价指标，不扩大项目目标，不提出下一阶段架构方案。
 

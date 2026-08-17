@@ -1,5 +1,9 @@
 # Context Package V2 Design
 
+> 文档状态：Current for Context Package V2 runtime structure；Superseded for Agent1B direct Context visibility.
+>
+> 当前 Agent1B 不直接消费完整 Context View；Agent1B 只通过 Agent1A Stage Artifact 间接继承 `known_conditions`, `specific_unknowns`, `context_refs`。
+
 ## Current Problem
 
 Context Package V1 can pass Markdown content into the Workflow, but it is still raw text. Agents must repeatedly infer which statements are known facts, which are business rules, and which items are still unknown. This causes duplicated clarification questions and broad gap detection, even when the Markdown has already answered part of the question.
@@ -74,7 +78,7 @@ original requirement_text + current Agent context_view
 
 Agent1A consumes confirmed facts, business rules, constraints, process flows, and unknowns. Unknowns are only known missing items, not confirmed facts.
 
-Agent1B consumes known facts/rules/constraints plus unknowns, so clarification questions should focus on unknowns instead of repeating known rules.
+Agent1B does not directly consume the full Context View. It consumes Agent1A Stage Artifact fields such as `known_conditions`, `specific_unknowns`, and `context_refs`, so clarification questions should focus on Agent1A-identified unknowns instead of repeating known conditions.
 
 Agent2 consumes known rules, constraints, flows, unknowns, and quality flags for evidence-bound risk analysis.
 

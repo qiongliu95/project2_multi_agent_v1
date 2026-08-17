@@ -1,5 +1,9 @@
 # Context Compiler Design Review
 
+> 文档状态：Experimental / Candidate。
+>
+> 本文讨论 Human Context Compiler 候选路径，不代表当前冻结 Workflow 要新增 Context 层、改变 Agent 顺序或改变 Agent1B indirect-only Context visibility。
+
 本文从当前 Multi-Agent 需求分析系统的实际问题出发，评审是否应在人工维护内容和 Runtime Context Package V2 之间增加一层 `Human Maintained Context Model -> Context Compiler -> Context Package V2`。
 
 本文只做技术方案设计，不修改代码，不实现功能。
@@ -331,7 +335,7 @@ Human Context Model 编译为 Context Package V2 后，仍沿用当前 Agent Con
 | Agent | 应消费的信息 | 是否需要修改职责 |
 |---|---|---|
 | Agent1A | 业务事实、规则、限制、流程、unknown | 不需要。继续负责需求解析和动作缺口识别 |
-| Agent1B | 已知规则摘要、限制、unknown、Agent1A specific unknowns | 不需要。继续负责澄清问题 |
+| Agent1B | Agent1A specific unknowns、known_conditions、context_refs 等 Stage Artifact 字段 | 不需要。继续负责澄清问题；不直接消费完整 Context View |
 | Agent2 | 规则、限制、流程、unknown、质量标记；后续可消费风险经验 | 不需要改职责。若引入 Risk Context，只是增强输入 |
 | Agent3 | 规则、限制、流程、unknown、风险分析结果；后续可消费验证经验 | 不需要改职责。保持验证关注点，不扩展为完整测试平台 |
 | Agent4 | 上游所有结果、source refs、quality flags、人审理由 | 不需要。继续负责汇总和人工复核判断 |

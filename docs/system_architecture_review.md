@@ -1,5 +1,9 @@
 # Multi-Agent 需求分析系统架构复盘
 
+> 文档状态：Historical / Superseded。
+>
+> 本文保留为架构复盘材料。当前冻结版本的 Agent 与 Context contract 以 `docs/agent_context_contract.md` 为准；Agent1B 当前不直接消费完整 Context View。
+
 本文以技术负责人视角，对当前 Multi-Agent 需求分析系统做架构复盘。目标是判断当前系统真实问题和下一步是否需要优化，而不是设计新系统。
 
 约束：
@@ -38,7 +42,7 @@ Context Package V2 JSON
 | Agent | 当前消费 section |
 |---|---|
 | Agent1A | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns` |
-| Agent1B | `confirmed_facts`, `business_rules`, `constraints`, `unknowns` |
+| Agent1B | none；indirect-only，通过 Agent1A Stage Artifact 间接获得 `known_conditions`, `specific_unknowns`, `context_refs` |
 | Agent2 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `quality_flags` |
 | Agent3 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns` |
 | Agent4 | `confirmed_facts`, `business_rules`, `constraints`, `process_flows`, `unknowns`, `source_refs`, `quality_flags` |
@@ -48,7 +52,7 @@ Structured Context V2 的优点已经被验证：
 - 能让 Agent 看到明确的业务规则、限制、流程和 unknown。
 - 能通过 item id 和 source_ref 做消费追踪。
 - 能减少 Markdown 全文进入 Agent1A 后被一次性压缩造成的信息损失。
-- 能让 Agent1A/Agent1B 更容易区分已知规则和具体待确认项。
+- 能让 Agent1A 更容易区分已知规则和具体待确认项，并通过 Agent1A Artifact 间接支持 Agent1B 澄清问题生成。
 
 ### 判断
 
@@ -311,7 +315,7 @@ history docs
 |---|---|---|
 | 信息重复 | Structured 模式下多个 Agent 都能看到部分相同规则和 unknown | 可接受，当前规模不大；但长上下文下会增加噪声 |
 | 上游压缩导致信息丢失 | Markdown 主要由 Agent1A 压缩后传下游 | 是当前 Markdown 路径最大问题 |
-| Agent 拿不到需要的信息 | Agent2 缺少历史风险模式；Agent3 缺少历史验证经验；Agent1B 不直接消费 process_flows | 会限制风险识别和验证关注点质量 |
+| Agent 拿不到需要的信息 | Agent2 缺少历史风险模式；Agent3 缺少历史验证经验；Agent1B 按当前 contract 不直接消费完整 Context，只依赖 Agent1A 压缩后的 Stage Artifact | 会限制风险识别和验证关注点质量 |
 | Context 与 Agent 职责不匹配 | Structured V2 更适合 Runtime，不适合人工维护；历史 Bug/测试经验不应混入 business_rules | 会导致维护成本和语义污染 |
 | 来源没有进入最终业务结论 | Trace 有 source_ref，但 Agent2/3/4 输出不强制带来源 | 人工复核仍需翻 Trace |
 
